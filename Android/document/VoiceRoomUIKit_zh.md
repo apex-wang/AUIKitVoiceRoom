@@ -96,17 +96,23 @@ VoiceRoomUIKit 是一个语聊房场景组件，提供房间管理和拉起语�
 ```kotlin
     mPermissionHelp.checkMicPerm(
             {
-                generateToken { config ->
-                    AUIVoiceRoomUikit.launchRoom(
-                        lunchType,
-                        roomInfo,
-                        config,
-                        mViewBinding.VoiceRoomView,
-                        AUIVoiceRoomUikit.RoomEventHandler {
+                roomInfo.let {
+                    generateToken(roomInfo.roomId) { config ->
+                        AUIVoiceRoomUikit.launchRoom(
+                            it,
+                            config,
+                            mViewBinding.VoiceRoomView,
+                            AUIVoiceRoomUikit.RoomEventHandler(
+                                onRoomLaunchSuccess = {
+                                    this.service = it
+                                },
+                                onRoomLaunchFailure = {
 
-                        })
-                    AUIVoiceRoomUikit.subscribeError(roomInfo.roomId, this)
-                    AUIVoiceRoomUikit.bindRespDelegate(this)
+                                }
+                            ))
+                        AUIVoiceRoomUikit.subscribeError(it.roomId, this)
+                        AUIVoiceRoomUikit.bindRespDelegate(this)
+                    }
                 }
             },
             {
