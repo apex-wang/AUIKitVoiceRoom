@@ -5,31 +5,41 @@
 VoiceRoomUIKit 是一个语聊房场景组件，提供房间管理和拉起语聊房场景页面的能力。 开发者可以使用该组件快速构建一个语聊房应用。
 
 ## Quick Started
-> 在集成之前，请确保您已根据此[教程](../Example/AUIKitVoiceRoom/README.md) 成功运行项目。
+> 在集成之前，请确保您已根据此[教程](../README.md) 成功运行项目。
 
 ### 1. Add Source Code
 
 **将以下源码复制到自己的项目中：**
 
-- [AUIKit](../AUIKit)
-- [AScenesKit](../AScenesKit)
+- [AScenesKit](../asceneskit)
 
 
-**在Setting.gradle文件中添加对AScenesKit和AUIKit的依赖**
+**在Setting.gradle文件中添加对AScenesKit的依赖(AScenesKit中已添加AUIKit的依赖)**
 
 ```gradle
 
-  rootProject.name = "AUIKitVoiceRoom"
-  def uiKitPath = new File(settingsDir, '../AUIKit/Android/auikit')
-  if(!uiKitPath.exists()){
-    throw new RuntimeException("Please run `git submodule update --init` in AUIKitVoiceRoom root direction.")
-  }
-
-  include ':auikit'
-  project(':auikit').projectDir = uiKitPath
   include ':asceneskit'
   
 ```
+
+**如果只是本地依赖AUIKit(此配置用于和AScenesKit平级时，其他情况请配置正确路径) 则需要在Setting.gradle文件中添加如下规则**
+
+```gradle
+
+  rootProject.name = "AUIVoiceRoom"
+  def uiKitPath = new File(settingsDir, '../AUIKit/Android/auikit')
+  if(uiKitPath.exists()){
+      include ':auikit'
+      project(':auikit').projectDir = uiKitPath
+  }
+  def uiKitUIPath = new File(settingsDir, '../AUIKit/Android/auikit-ui')
+  if(uiKitUIPath.exists()){
+      include ':auikit-ui'
+      project(':auikit-ui').projectDir = uiKitUIPath
+  }
+  
+```
+
 
 ### 2. Initialize VoiceRoomUIKit
 ```kotlin
@@ -136,7 +146,7 @@ AUIVoiceRoomUikit.unsubscribeError(roomId, this@VoiceRoomActivity)
 //然后使用AUIRtmErrorProxyDelegate回调中的onTokenPrivilegeWillExpire回调方法更新所有token
 override fun onTokenPrivilegeWillExpire(channelName: String?) {
         generateToken(channelName, onSuccess = {
-            AUIRoomContext.shared().roomConfig = it
+            service?.renew(it)//AUIVoiceRoomService
         })
     }
 ```
