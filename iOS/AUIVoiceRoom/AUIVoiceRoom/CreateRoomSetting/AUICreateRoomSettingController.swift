@@ -1,12 +1,12 @@
 //
 //  CreateRoomSettingController.swift
-//  AUIKitVoiceRoom
+//  AUIVoiceRoom
 //
 //  Created by 朱继超 on 2023/6/5.
 //
 
 import UIKit
-import AUIKit
+import AUIKitCore
 #if DEBUG
     import DoraemonKit
 #endif
@@ -113,7 +113,7 @@ final class AUICreateRoomSettingController: UIViewController,UITextFieldDelegate
                 self.background.image = UIImage(named: "bg_img_of_dark_mode")
                 themeName = "Dark"
             }
-            AUIRoomContext.shared.switchTheme(themeName: themeName)
+            AUIThemeManager.shared.switchTheme(themeName: themeName)
         }
     }
     
